@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Nutrition Search</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .conversion-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000; /* Ensure it stays on top */
+        }
+        table th, table td {
+            text-align: center;
+        }
+        .hidden-column {
+            display: none;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Function to toggle vitamin and mineral columns visibility
+            function toggleColumns(className) {
+                document.querySelectorAll(`.${className}`).forEach(col => {
+                    col.classList.toggle("hidden-column");
+                });
+            }
+
+            // Initialize columns as hidden initially
+            document.querySelectorAll(".vitamins-column").forEach(col => col.classList.add("hidden-column"));
+            document.querySelectorAll(".minerals-column").forEach(col => col.classList.add("hidden-column"));
+
+            // Event listeners for toggle buttons
+            document.getElementById("toggleVitamins").addEventListener("click", function() {
+                toggleColumns("vitamins-column");
+            });
+
+            document.getElementById("toggleMinerals").addEventListener("click", function() {
+                toggleColumns("minerals-column");
+            });
+
+            // Initial calculation of total values
+            updateTotalValues();
+        });
+
+        function updateNutrients(rowId, originalQuantity) {
+            const quantityInput = document.getElementById(`quantity-${rowId}`);
+            const quantity = parseFloat(quantityInput.value);
+
+            if (isNaN(quantity) || quantity <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            const nutrientCells = document.querySelectorAll(`.nutrient-${rowId}`);
+            nutrientCells.forEach(cell => {
+                const originalValue = parseFloat(cell.getAttribute("data-original-value"));
+                const newValue = (originalValue * quantity) / originalQuantity;
+                cell.innerText = newValue.toFixed(2);
+            });
+
+            // Update the total values
+            updateTotalValues();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll("input[type='number']").forEach(input => {
+                input.addEventListener("change", function() {
+                    const rowIndex = input.id.split("-")[1];
+                    updateNutrients(rowIndex, 100);
+                });
+            });
+
+            // Initial calculation of total values
+            updateTotalValues();
+        });
+
+        function updateTotalValues() {
+            let totalWater = 0, totalEnergy = 0, totalProtein = 0, totalLipid = 0, totalCarbohydrate = 0, totalFiber = 0, totalVitC = 0, totalVitA = 0, totalVitD = 0, totalVitE = 0, totalVitB6 = 0, totalCalcium = 0, totalIron = 0, totalMagnesium = 0, totalPhosphorus = 0, totalPotassium = 0, totalSodium = 0, totalZinc = 0;
+
+            document.querySelectorAll('tbody tr').forEach(row => {
+                const quantity = parseFloat(row.querySelector('input[type="number"]').value);
+
+                if (!isNaN(quantity)) {
+                    totalWater += parseFloat(row.querySelector('.water').getAttribute('data-original-value')) * quantity / 100;
+                    totalEnergy += parseFloat(row.querySelector('.energy').getAttribute('data-original-value')) * quantity / 100;
+                    totalProtein += parseFloat(row.querySelector('.protein').getAttribute('data-original-value')) * quantity / 100;
+                    totalLipid += parseFloat(row.querySelector('.lipid').getAttribute('data-original-value')) * quantity / 100;
+                    totalCarbohydrate += parseFloat(row.querySelector('.carbohydrate').getAttribute('data-original-value')) * quantity / 100;
+                    totalFiber += parseFloat(row.querySelector('.fiber').getAttribute('data-original-value')) * quantity / 100;
+                    totalVitC += parseFloat(row.querySelector('.vitamin-c').getAttribute('data-original-value')) * quantity / 100;
+                    totalVitA += parseFloat(row.querySelector('.vitamin-a').getAttribute('data-original-value')) * quantity / 100;
+                    totalVitD += parseFloat(row.querySelector('.vitamin-d').getAttribute('data-original-value')) * quantity / 100;
+
+                    totalVitE += parseFloat(row.querySelector('.vitamin-e').getAttribute('data-original-value')) * quantity / 100;
+
+                    totalVitB6 += parseFloat(row.querySelector('.vitamin-b6').getAttribute('data-original-value')) * quantity / 100;
+
+                    totalCalcium += parseFloat(row.querySelector('.calcium').getAttribute('data-original-value')) * quantity / 100;
+                    totalIron += parseFloat(row.querySelector('.iron').getAttribute('data-original-value')) * quantity / 100;
+                    totalMagnesium += parseFloat(row.querySelector('.magnesium').getAttribute('data-original-value')) * quantity / 100;
+                    totalPhosphorus += parseFloat(row.querySelector('.phosphorus').getAttribute('data-original-value')) * quantity / 100;
+                    totalPotassium += parseFloat(row.querySelector('.potassium').getAttribute('data-original-value')) * quantity / 100;
+                    totalSodium += parseFloat(row.querySelector('.sodium').getAttribute('data-original-value')) * quantity / 100;
+                    totalZinc += parseFloat(row.querySelector('.zinc').getAttribute('data-original-value')) * quantity / 100;
+                }
+            });
+
+            document.querySelector('.nutrient.water.total-value').innerText = totalWater.toFixed(2);
+            document.querySelector('.nutrient.energy.total-value').innerText = totalEnergy.toFixed(2);
+            document.querySelector('.nutrient.protein.total-value').innerText = totalProtein.toFixed(2);
+            document.querySelector('.nutrient.lipid.total-value').innerText = totalLipid.toFixed(2);
+            document.querySelector('.nutrient.carbohydrate.total-value').innerText = totalCarbohydrate.toFixed(2);
+            document.querySelector('.nutrient.fiber.total-value').innerText = totalFiber.toFixed(2);
+            document.querySelector('.nutrient.vitamin-c.total-value').innerText = totalVitC.toFixed(2);
+            document.querySelector('.nutrient.vitamin-a.total-value').innerText = totalVitA.toFixed(2);
+            document.querySelector('.nutrient.vitamin-d.total-value').innerText = totalVitA.toFixed(2);
+            document.querySelector('.nutrient.vitamin-e.total-value').innerText = totalVitA.toFixed(2);
+            document.querySelector('.nutrient.vitamin-b6.total-value').innerText = totalVitA.toFixed(2);
+            document.querySelector('.nutrient.calcium.total-value').innerText = totalCalcium.toFixed(2);
+            document.querySelector('.nutrient.iron.total-value').innerText = totalIron.toFixed(2);
+            document.querySelector('.nutrient.magnesium.total-value').innerText = totalMagnesium.toFixed(2);
+            document.querySelector('.nutrient.phosphorus.total-value').innerText = totalPhosphorus.toFixed(2);
+            document.querySelector('.nutrient.potassium.total-value').innerText = totalPotassium.toFixed(2);
+            document.querySelector('.nutrient.sodium.total-value').innerText = totalSodium.toFixed(2);
+            document.querySelector('.nutrient.zinc.total-value').innerText = totalZinc.toFixed(2);
+        }
+
+        function convertToGrams() {
+            const quantityInput = document.getElementById('input_value');
+            const fromUnitSelect = document.getElementById('from_unit');
+            const resultCell = document.getElementById('converted_value');
+
+            const quantity = parseFloat(quantityInput.value);
+            const fromUnit = fromUnitSelect.value;
+            let conversionFactor;
+
+            switch (fromUnit) {
+                case 'teaspoon':
+                    conversionFactor = 4.92892;  // 1 teaspoon = 4.92892 grams
+                    break;
+                case 'tablespoon':
+                    conversionFactor = 14.7868;  // 1 tablespoon = 14.7868 grams
+                    break;
+                case 'cup':
+                    conversionFactor = 240;  // 1 cup = 240 grams
+                    break;
+                case 'fluid_ounce':
+                    conversionFactor = 29.5735;  // 1 fluid ounce = 29.5735 grams
+                    break;
+                case 'pint':
+                    conversionFactor = 473.176;  // 1 pint = 473.176 grams
+                    break;
+                case 'quart':
+                    conversionFactor = 946.353;  // 1 quart = 946.353 grams
+                    break;
+                case 'gallon':
+                    conversionFactor = 3785.41;  // 1 gallon = 3785.41 grams
+                    break;
+                case 'milliliter':
+                    conversionFactor = 1;  // 1 milliliter = 1 gram
+                    break;
+                default:
+                    alert("Please select a valid unit.");
+                    return;
+            }
+
+            if (isNaN(quantity) || quantity <= 0) {
+                alert("Please enter a valid quantity.");
+                return;
+            }
+
+            const convertedValue = quantity * conversionFactor;
+            resultCell.innerText = convertedValue.toFixed(2);
+        }
+    </script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Nutrition Search</h1>
+        <form method="post" action="/">
+            <div class="form-group">
+                <label for="input_description">Enter food description:</label>
+                <input type="text" class="form-control" id="input_description" name="input_description" required style="width: 700px">
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+        <hr>
+        {% if matches %}
+        <h2>Search Results</h2>
+        <ul class="list-group" style="width: 700px">
+            {% for description, ndb_no in matches %}
+            <li class="list-group-item">
+                <form method="post" action="{{ url_for('add_item') }}" class="d-inline">
+                    <input type="hidden" name="description" value="{{ description }}">
+                    <input type="hidden" name="ndb_no" value="{{ ndb_no }}">
+                    <button type="submit" class="btn btn-success">Add</button>
+                </form>
+                {{ description }}
+            </li>
+            {% endfor %}
+        </ul>
+        <hr>
+        {% endif %}
+    </div>
+    <div class="conversion-container">
+        <h2>Unit to Gram Converter</h2>
+        <div class="d-flex align-items-center">
+            <input type="number" id="input_value" class="form-control mr-2" style="width: 80px;" placeholder="Quantity">
+            <select id="from_unit" class="form-control mr-2" style="width: 120px;">
+                <option value="teaspoon">Teaspoon</option>
+                <option value="tablespoon">Tablespoon</option>
+                <option value="cup">Cup</option>
+                <option value="fluid_ounce">Fluid Ounce</option>
+                <option value="pint">Pint</option>
+                <option value="quart">Quart</option>
+                <option value="gallon">Gallon</option>
+                <option value="milliliter">Milliliter</option>
+            </select>
+            <button class="btn btn-primary" onclick="convertToGrams()">Convert</button>
+        </div>
+        <p id="converted_value" class="mt-2"></p>
+    </div>
+    <div class="container mt-3">
+        <h2>Nutrient Table</h2>
+        <button class="btn btn-info mb-2" id="toggleVitamins">Toggle Vitamins</button>
+        <button class="btn btn-info mb-2" id="toggleMinerals">Toggle Minerals</button>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantity (g)</th>
+                    <th>Water (g)</th>
+                    <th>Energy (Kcal)</th>
+                    <th>Protein (g)</th>
+                    <th>Lipid (g)</th>
+                    <th>Carbohydrate (g)</th>
+                    <th>Fiber (g)</th>
+                    <th class="vitamins-column hidden-column">Vitamin C (mg)</th>
+                    <th class="vitamins-column hidden-column">Vitamin A (IU)</th>
+                    <th class="vitamins-column hidden-column">Vitamin D (IU)</th>
+                    <th class="vitamins-column hidden-column">Vitamin E (mg)</th>
+                    <th class="vitamins-column hidden-column">Vitamin B6 (mg)</th>
+                    <th class="minerals-column hidden-column">Calcium (mg)</th>
+                    <th class="minerals-column hidden-column">Iron (mg)</th>
+                    <th class="minerals-column hidden-column">Magnesium (mg)</th>
+                    <th class="minerals-column hidden-column">Phosphorus (mg)</th>
+                    <th class="minerals-column hidden-column">Potassium (mg)</th>
+                    <th class="minerals-column hidden-column">Sodium (mg)</th>
+                    <th class="minerals-column hidden-column">Zinc (mg)</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in nutrient_items %}
+                <tr>
+                    <td>{{ item.description }}</td>
+                    <td>
+                        <input type="number" class="form-control" id="quantity-{{ loop.index }}" value="{{ item.Quantity }}" min="1" step="1" onchange="updateNutrients('{{ loop.index }}', {{ item.Quantity }})">
+                    </td>
+                    <td class="nutrient water nutrient-{{ loop.index }}" data-original-value="{{ item['Water_(g)'] }}">{{ (item['Water_(g)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient energy nutrient-{{ loop.index }}" data-original-value="{{ item['Energ_Kcal'] }}">{{ (item['Energ_Kcal'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient protein nutrient-{{ loop.index }}" data-original-value="{{ item['Protein_(g)'] }}">{{ (item['Protein_(g)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient lipid nutrient-{{ loop.index }}" data-original-value="{{ item['Lipid_Tot_(g)'] }}">{{ (item['Lipid_Tot_(g)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient carbohydrate nutrient-{{ loop.index }}" data-original-value="{{ item['Carbohydrt_(g)'] }}">{{ (item['Carbohydrt_(g)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient fiber nutrient-{{ loop.index }}" data-original-value="{{ item['Fiber_TD_(g)'] }}">{{ (item['Fiber_TD_(g)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient vitamin-c nutrient-{{ loop.index }} vitamins-column hidden-column" data-original-value="{{ item['Vit_C_(mg)'] }}">{{ (item['Vit_C_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient vitamin-a nutrient-{{ loop.index }} vitamins-column hidden-column" data-original-value="{{ item['Vit_A_IU'] }}">{{ (item['Vit_A_IU'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient vitamin-d nutrient-{{ loop.index }} vitamins-column hidden-column" data-original-value="{{ item['Vit_D_IU'] }}">{{ (item['Vit_D_IU'] * item.Quantity / 100)|round(2) }}</td>
+
+                    <td class="nutrient vitamin-e nutrient-{{ loop.index }} vitamins-column hidden-column" data-original-value="{{ item['Vit_E_(mg)'] }}">{{ (item['Vit_E_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+
+                    <td class="nutrient vitamin-b6 nutrient-{{ loop.index }} vitamins-column hidden-column" data-original-value="{{ item['Vit_B6_(mg)'] }}">{{ (item['Vit_B6_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+
+                    <td class="nutrient calcium nutrient-{{ loop.index }} minerals-column hidden-column" data-original-value="{{ item['Calcium_(mg)'] }}">{{ (item['Calcium_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient iron nutrient-{{ loop.index }} minerals-column hidden-column" data-original-value="{{ item['Iron_(mg)'] }}">{{ (item['Iron_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient magnesium nutrient-{{ loop.index }} minerals-column hidden-column" data-original-value="{{ item['Magnesium_(mg)'] }}">{{ (item['Magnesium_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient phosphorus nutrient-{{ loop.index }} minerals-column hidden-column" data-original-value="{{ item['Phosphorus_(mg)'] }}">{{ (item['Phosphorus_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient potassium nutrient-{{ loop.index }} minerals-column hidden-column" data-original-value="{{ item['Potassium_(mg)'] }}">{{ (item['Potassium_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient sodium nutrient-{{ loop.index }} minerals-column hidden-column" data-original-value="{{ item['Sodium_(mg)'] }}">{{ (item['Sodium_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+                    <td class="nutrient zinc nutrient-{{ loop.index }} minerals-column hidden-column" data-original-value="{{ item['Zinc_(mg)'] }}">{{ (item['Zinc_(mg)'] * item.Quantity / 100)|round(2) }}</td>
+                 
+                    <td>
+                        <form method="post" action="{{ url_for('remove_item') }}">
+                            <input type="hidden" name="index" value="{{ loop.index0 }}">
+                            <button type="submit" class="btn btn-danger">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td><strong>Total</strong></td>
+                    <td></td>
+                    <td class="nutrient water total-value"></td>
+                    <td class="nutrient energy total-value"></td>
+                    <td class="nutrient protein total-value"></td>
+                    <td class="nutrient lipid total-value"></td>
+                    <td class="nutrient carbohydrate total-value"></td>
+                    <td class="nutrient fiber total-value"></td>
+                    <td class="nutrient vitamin-c total-value vitamins-column hidden-column"></td>
+                    <td class="nutrient vitamin-a total-value vitamins-column hidden-column"></td>
+                    <td class="nutrient vitamin-d total-value vitamins-column hidden-column"></td>
+                    <td class="nutrient vitamin-e total-value vitamins-column hidden-column"></td>
+                    <td class="nutrient vitamin-b6 total-value vitamins-column hidden-column"></td>
+                    <td class="nutrient calcium total-value minerals-column hidden-column"></td>
+                    <td class="nutrient iron total-value minerals-column hidden-column"></td>
+                    <td class="nutrient magnesium total-value minerals-column hidden-column"></td>
+                    <td class="nutrient phosphorus total-value minerals-column hidden-column"></td>
+                    <td class="nutrient potassium total-value minerals-column hidden-column"></td>
+                    <td class="nutrient sodium total-value minerals-column hidden-column"></td>
+                    <td class="nutrient zinc total-value minerals-column hidden-column"></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+
+</body>
+</html>
